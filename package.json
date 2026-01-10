@@ -1,0 +1,28 @@
+{
+  "name": "edge-graphql",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mesh-compose -o supergraph.graphql && hive-gateway supergraph",
+    "start": "mesh-compose -o supergraph.graphql && hive-gateway supergraph",
+    "build": "mesh-compose -o supergraph.graphql",
+    "lint": "eslint .",
+    "test": "node --test \"tests/**/*.js\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "graphql": "^16.8.1",
+    "@graphql-hive/gateway": "^2.3.0",
+    "@graphql-mesh/compose-cli": "^1.5.9",
+    "@omnigraph/openapi": "^0.109.29"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@eslint/js": "^9.19.0",
+    "eslint": "^9.19.0",
+    "typescript-eslint": "^8.21.0",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,16 @@
+node_modules
+.git
+.github
+.vscode
+.mesh
+.env
+.env.*
+Dockerfile
+README.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE.md
+eslint.config.js
+tsconfig.json
+tests
+docker-compose.*.yaml

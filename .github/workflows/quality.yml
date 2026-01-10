@@ -1,0 +1,32 @@
+name: Quality
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 5"
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Config properties file
+        run: bash .github/scripts/config-env.sh
+      - name: Install dependencies
+        run: npm ci
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+      - name: Check for outdated dependencies
+        run: npm outdated || true
+          delete-branch: true
+          token: ${{ steps.app-token.outputs.token }}
