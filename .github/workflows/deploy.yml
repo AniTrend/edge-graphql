@@ -21,6 +21,9 @@ on:
       - main
     tags:
       - "*"
+  repository_dispatch:
+    types:
+      - swagger-spec-updated
 
 env:
   IMAGE_NAME: ghcr.io/anitrend/edge-graphql
@@ -30,10 +33,29 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.event.inputs.environment || 'production' }}
+      name: ${{ github.event.inputs.environment || github.event.client_payload.environment || 'production' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+      - name: Ensure swagger spec
+        env:
+          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
+          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
+        run: |
+          if [[ -f swagger-spec.json ]]; then
+            echo "swagger-spec.json present"
+            exit 0
+          fi
+          if [[ -n "$SPEC_B64" ]]; then
+            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
+            exit 0
+          fi
+          if [[ -n "$SPEC_URL" ]]; then
+            curl -fSL "$SPEC_URL" -o swagger-spec.json
+            exit 0
+          fi
+          echo "swagger-spec.json missing and no spec source provided"
+          exit 1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -49,6 +71,8 @@ jobs:
         run: |
           if [[ -n "${{ github.event.inputs.tag }}" ]]; then
             tag=${{ github.event.inputs.tag }}
+          elif [[ -n "${{ github.event.client_payload.tag }}" ]]; then
+            tag=${{ github.event.client_payload.tag }}
           elif [[ "${{ github.ref }}" =~ ^refs/tags/ ]]; then
             tag=${GITHUB_REF#refs/tags/}
           else
@@ -76,7 +100,7 @@ jobs:
         if: needs.deploy.result == 'success'
         run: |
           echo "Deployed successfully!"
-          echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
+          echo "Environment: ${{ github.event.inputs.environment || github.event.client_payload.environment || 'production' }}"
           echo "Commit: ${{ github.sha }}"
           echo "Timestamp: $(date -u)"
 
