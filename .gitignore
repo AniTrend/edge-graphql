@@ -164,5 +164,4 @@ dist
 
 # Auto generated client
 .mesh
-swagger-spec.json
 supergraph.graphql

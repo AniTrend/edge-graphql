@@ -5,9 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  repository_dispatch:
-    types:
-      - swagger-spec-updated
 
 permissions:
   contents: read
@@ -19,25 +16,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v6
-      - name: Ensure swagger spec
-        env:
-          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
-          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
-        run: |
-          if [[ -f swagger-spec.json ]]; then
-            echo "swagger-spec.json present"
-            exit 0
-          fi
-          if [[ -n "$SPEC_B64" ]]; then
-            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
-            exit 0
-          fi
-          if [[ -n "$SPEC_URL" ]]; then
-            curl -fSL "$SPEC_URL" -o swagger-spec.json
-            exit 0
-          fi
-          echo "swagger-spec.json missing and no spec source provided"
-          exit 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -56,25 +34,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v6
-      - name: Ensure swagger spec
-        env:
-          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
-          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
-        run: |
-          if [[ -f swagger-spec.json ]]; then
-            echo "swagger-spec.json present"
-            exit 0
-          fi
-          if [[ -n "$SPEC_B64" ]]; then
-            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
-            exit 0
-          fi
-          if [[ -n "$SPEC_URL" ]]; then
-            curl -fSL "$SPEC_URL" -o swagger-spec.json
-            exit 0
-          fi
-          echo "swagger-spec.json missing and no spec source provided"
-          exit 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -94,25 +53,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v6
-      - name: Ensure swagger spec
-        env:
-          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
-          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
-        run: |
-          if [[ -f swagger-spec.json ]]; then
-            echo "swagger-spec.json present"
-            exit 0
-          fi
-          if [[ -n "$SPEC_B64" ]]; then
-            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
-            exit 0
-          fi
-          if [[ -n "$SPEC_URL" ]]; then
-            curl -fSL "$SPEC_URL" -o swagger-spec.json
-            exit 0
-          fi
-          echo "swagger-spec.json missing and no spec source provided"
-          exit 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -137,25 +77,6 @@ jobs:
     steps:
       - name: Setup repo
         uses: actions/checkout@v6
-      - name: Ensure swagger spec
-        env:
-          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
-          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
-        run: |
-          if [[ -f swagger-spec.json ]]; then
-            echo "swagger-spec.json present"
-            exit 0
-          fi
-          if [[ -n "$SPEC_B64" ]]; then
-            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
-            exit 0
-          fi
-          if [[ -n "$SPEC_URL" ]]; then
-            curl -fSL "$SPEC_URL" -o swagger-spec.json
-            exit 0
-          fi
-          echo "swagger-spec.json missing and no spec source provided"
-          exit 1
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -175,25 +96,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-      - name: Ensure swagger spec
-        env:
-          SPEC_URL: ${{ github.event.client_payload.spec_url || vars.SWAGGER_SPEC_URL }}
-          SPEC_B64: ${{ github.event.client_payload.spec_b64 }}
-        run: |
-          if [[ -f swagger-spec.json ]]; then
-            echo "swagger-spec.json present"
-            exit 0
-          fi
-          if [[ -n "$SPEC_B64" ]]; then
-            echo "$SPEC_B64" | base64 --decode > swagger-spec.json
-            exit 0
-          fi
-          if [[ -n "$SPEC_URL" ]]; then
-            curl -fSL "$SPEC_URL" -o swagger-spec.json
-            exit 0
-          fi
-          echo "swagger-spec.json missing and no spec source provided"
-          exit 1
 
       - name: Set deployment status
         run: |
