@@ -1,0 +1,84 @@
+name: api-spec-gen
+
+on:
+  repository_dispatch:
+    types: [trigger-workflow, trigger-action]
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: Base branch for the generated pull request
+        required: false
+        default: main
+      release_repo:
+        description: Repo to download the OpenAPI spec from (owner/repo)
+        required: false
+        default: AniTrend/on-the-edge
+      release_tag:
+        description: Release tag to download the OpenAPI spec from
+        required: false
+        default: latest
+      release_asset:
+        description: Release asset name for the OpenAPI spec
+        required: false
+        default: swagger-spec.json
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-spec:
+    runs-on: ubuntu-latest
+    env:
+      BASE_BRANCH: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.base_branch || github.event_name == 'workflow_dispatch' && inputs.base_branch || 'main' }}
+      RELEASE_REPO: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.release_repo || github.event_name == 'workflow_dispatch' && inputs.release_repo || 'AniTrend/on-the-edge' }}
+      RELEASE_TAG: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.release_tag || github.event_name == 'workflow_dispatch' && inputs.release_tag || 'latest' }}
+      RELEASE_ASSET: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.release_asset || github.event_name == 'workflow_dispatch' && inputs.release_asset || 'swagger-spec.json' }}
+    steps:
+      - name: Create GitHub app token
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_SECRET }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Download OpenAPI spec
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          if [[ "$RELEASE_TAG" = "latest" ]]; then
+            gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET"
+          else
+            gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET" --tag "$RELEASE_TAG"
+          fi
+          if [[ "$RELEASE_ASSET" != "swagger-spec.json" && -f "$RELEASE_ASSET" ]]; then
+            mv "$RELEASE_ASSET" swagger-spec.json
+          fi
+          if [[ ! -f swagger-spec.json ]]; then
+            echo "swagger-spec.json not found after download"
+            exit 1
+          fi
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: |
+            swagger-spec.json
+          token: ${{ steps.app-token.outputs.token }}
+          signoff: true
+          delete-branch: true
+          commit-message: "chore: update swagger spec"
+          author: "GitHub Actions <actions@github.com>"
+          title: "chore: update swagger spec"
+          body: |
+            This PR was automatically generated to sync swagger-spec.json.
+            Please review the changes and merge if everything looks good.
+          branch: build/swagger-spec-update
+          base: ${{ env.BASE_BRANCH }}
+          labels: "contract-update"
