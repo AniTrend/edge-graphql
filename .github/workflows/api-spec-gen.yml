@@ -1,4 +1,4 @@
-name: api-spec-gen
+name: Swagger Spec
 
 on:
   repository_dispatch:
