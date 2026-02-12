@@ -28,5 +28,3 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
       - name: Check for outdated dependencies
         run: npm outdated || true
-          delete-branch: true
-          token: ${{ steps.app-token.outputs.token }}
