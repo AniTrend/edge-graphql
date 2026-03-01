@@ -53,7 +53,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           if [[ "$RELEASE_TAG" = "latest" ]]; then
-            gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET"
+            gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET" --clobber
           else
             gh release download "$RELEASE_TAG" --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET"
           fi
