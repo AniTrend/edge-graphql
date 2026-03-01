@@ -55,7 +55,7 @@ jobs:
           if [[ "$RELEASE_TAG" = "latest" ]]; then
             gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET"
           else
-            gh release download --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET" --tag "$RELEASE_TAG"
+            gh release download "$RELEASE_TAG" --repo "$RELEASE_REPO" --pattern "$RELEASE_ASSET"
           fi
           if [[ "$RELEASE_ASSET" != "swagger-spec.json" && -f "$RELEASE_ASSET" ]]; then
             mv "$RELEASE_ASSET" swagger-spec.json
