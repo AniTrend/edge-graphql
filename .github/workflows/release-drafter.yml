@@ -5,18 +5,20 @@ on:
     branches:
       - dev
   pull_request:
-     types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
 
 jobs:
-  update-release-draft:
+  release-drafter:
+    name: Update Release Draft
     permissions:
-      # write permission is required to create a github release
       contents: write
-      # write permission is required for autolabeler
       pull-requests: write
+    outputs:
+      resolved_version: ${{ steps.draft_release.outputs.resolved_version }}
+      tag_name: ${{ steps.draft_release.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-github-app-token@v2
@@ -25,8 +27,84 @@ jobs:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: release-drafter/release-drafter@v6
+        id: draft_release
         with:
            config-name: release-drafter-config.yml
            disable-autolabeler: false
+           publish: false
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
+  bump-version:
+    name: Bump Package Version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [release-drafter]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Get current version
+        id: current_version
+        run: |
+          CURRENT_VERSION=$(jq -r '.version' ./package.json)
+          printf 'current_version=%s\n' "$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check if version update needed
+        id: version_check
+        run: |
+          CURRENT_VERSION="${{ steps.current_version.outputs.current_version }}"
+          NEW_VERSION="${{ needs.release-drafter.outputs.resolved_version }}"
+
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            printf 'needs_update=false\n' >> "$GITHUB_OUTPUT"
+            printf '::notice::Version is already up to date (%s)\n' "$NEW_VERSION"
+          else
+            printf 'needs_update=true\n' >> "$GITHUB_OUTPUT"
+            printf '::notice::Version update needed: %s -> %s\n' "$CURRENT_VERSION" "$NEW_VERSION"
+          fi
+
+      - name: Bump version in package.json
+        if : steps.version_check.outputs.needs_update == 'true'
+        run: |
+          npm version "${{ needs.release-drafter.outputs.resolved_version }}" --no-git-tag-version
+
+      - name: Create Pull Request
+        if: steps.version_check.outputs.needs_update == 'true'
+        uses: peter-evans/create-pull-request@v7
+        env:
+          HUSKY: '0'
+        with:
+          add-paths: |
+            package.json
+            package-lock.json
+          token: ${{ steps.app-token.outputs.token }}
+          signoff: true
+          delete-branch: true
+          commit-message: "chore(release): bump version to ${{ needs.release-drafter.outputs.resolved_version }}"
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          title: "chore(release): bump package version to ${{ needs.release-drafter.outputs.resolved_version }}"
+          body: |
+            This PR was automatically generated to update the package version.
+          branch: build/bump-package-version
+          labels: "version-bump,:skateboard: skip-changelog"
