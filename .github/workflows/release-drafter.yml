@@ -30,7 +30,7 @@ jobs:
         id: draft_release
         with:
            config-name: release-drafter-config.yml
-           disable-autolabeler: false
+           commitish: ${{ github.event.repository.default_branch }}
            publish: false
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -85,7 +85,7 @@ jobs:
           fi
 
       - name: Bump version in package.json
-        if : steps.version_check.outputs.needs_update == 'true'
+        if: steps.version_check.outputs.needs_update == 'true'
         run: |
           npm version "${{ needs.release-drafter.outputs.resolved_version }}" --no-git-tag-version
 
