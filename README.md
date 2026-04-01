@@ -44,3 +44,23 @@ The supergraph is generated from swagger-spec.json and served via Hive Gateway.
 
 GraphQL Mesh is configured in mesh.config.ts. The file loads .env and reads EDGE
 for the REST API base URL.
+
+Hive Gateway runtime options are configured in gateway.config.ts. Header
+forwarding to the upstream REST service is handled there through transportEntries
+for the EdgeAPI subgraph.
+
+Forwarded header allowlist:
+
+- accept
+- accept-encoding
+- authorization
+- user-agent
+- x-app-name
+- x-app-version
+- x-app-code
+- x-app-source
+- x-app-locale
+- x-app-build
+
+Note: header propagation is runtime behavior and is not configured in
+swagger-spec.json.
