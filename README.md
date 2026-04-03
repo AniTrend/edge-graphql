@@ -49,6 +49,22 @@ Hive Gateway runtime options are configured in gateway.config.ts. Header
 forwarding to the upstream REST service is handled there through transportEntries
 for the EdgeAPI subgraph.
 
+## OpenTelemetry
+
+Gateway startup now initializes OpenTelemetry when any OTLP endpoint is set.
+Configuration is environment-driven:
+
+- `OTEL_EXPORTER_OTLP_ENDPOINT`: base endpoint used as fallback for all signals
+- `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`: traces endpoint
+- `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`: metrics endpoint
+- `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`: logs endpoint
+
+If signal-specific variables are omitted, the gateway derives them from
+`OTEL_EXPORTER_OTLP_ENDPOINT` using `/v1/traces`, `/v1/metrics`, and `/v1/logs`.
+
+The gateway enables Hive Gateway OpenTelemetry tracing and auto-instrumentation
+for Node.js runtime libraries, and flushes telemetry on `SIGINT`/`SIGTERM`.
+
 Forwarded header allowlist:
 
 - accept

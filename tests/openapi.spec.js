@@ -54,3 +54,25 @@ test('gateway forwards required headers to EdgeAPI transport', async () => {
     )
   }
 })
+
+test('gateway config wires OpenTelemetry endpoints and graceful shutdown', async () => {
+  const gatewayConfig = await readGatewayConfig()
+
+  const requiredSnippets = [
+    'OTEL_EXPORTER_OTLP_ENDPOINT',
+    'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
+    'OTEL_EXPORTER_OTLP_METRICS_ENDPOINT',
+    'OTEL_EXPORTER_OTLP_LOGS_ENDPOINT',
+    "openTelemetry: {",
+    'telemetrySdk.start()',
+    "process.once('SIGINT'",
+    "process.once('SIGTERM'",
+  ]
+
+  for (const snippet of requiredSnippets) {
+    assert.ok(
+      gatewayConfig.includes(snippet),
+      `Expected gateway config to include telemetry snippet: ${snippet}`,
+    )
+  }
+})
