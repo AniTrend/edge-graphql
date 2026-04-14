@@ -37,6 +37,17 @@ The current OpenAPI spec exposes 6 operations, mapped into GraphQL `Query` field
 - GraphiQL availability and runtime behavior
 - Per-subgraph transport customization (including upstream header forwarding)
 - Plugin and observability extensions supported by Hive Gateway
+- OpenTelemetry bootstrap for traces, metrics, and logs via OTLP endpoints
+
+### OpenTelemetry capability
+
+- Environment-based OTLP configuration using:
+	- `OTEL_EXPORTER_OTLP_ENDPOINT`
+	- `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
+	- `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`
+	- `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
+- Signal-specific OTLP endpoints override the base OTLP endpoint
+- Telemetry is initialized at gateway startup and shutdown is flushed on process signals
 
 ## What To Change For New Features
 
