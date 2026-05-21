@@ -133,6 +133,14 @@ Current state:
 - Supports traces, metrics, and logs over OTLP HTTP
 - `openTelemetry.traces` enabled in Hive Gateway
 - Graceful shutdown flushes SDK on `SIGINT`/`SIGTERM`
+- Telemetry bootstrap is centralized in `telemetry.ts` with env-driven signal toggles and batch controls
+
+Phase 1 tuning knobs (examples):
+
+- `OTEL_TRACES_ENABLED`, `OTEL_METRICS_ENABLED`, `OTEL_LOGS_ENABLED`
+- `OTEL_SERVICE_NAME` (service version auto-resolves from `package.json`; override with `OTEL_SERVICE_VERSION` only when needed)
+- `OTEL_METRIC_EXPORT_INTERVAL`, `OTEL_METRIC_EXPORT_TIMEOUT`
+- `OTEL_BSP_MAX_QUEUE_SIZE`, `OTEL_BSP_MAX_EXPORT_BATCH_SIZE`, `OTEL_BSP_SCHEDULE_DELAY`, `OTEL_BSP_EXPORT_TIMEOUT`
 
 Recommended enrichment plan:
 

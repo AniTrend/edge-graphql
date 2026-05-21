@@ -18,6 +18,11 @@ const readGatewayConfig = async () => {
   return fs.readFile(configPath, 'utf-8')
 }
 
+const readTelemetryConfig = async () => {
+  const telemetryPath = path.join(projectRoot, 'telemetry.ts')
+  return fs.readFile(telemetryPath, 'utf-8')
+}
+
 test('swagger spec includes OpenAPI metadata', async () => {
   const spec = await readSwaggerSpec()
   assert.ok(spec.openapi, 'Expected openapi version to be defined')
@@ -55,24 +60,44 @@ test('gateway forwards required headers to EdgeAPI transport', async () => {
   }
 })
 
-test('gateway config wires OpenTelemetry endpoints and graceful shutdown', async () => {
+test('gateway config and telemetry bootstrap wiring are configured', async () => {
   const gatewayConfig = await readGatewayConfig()
+  const telemetryConfig = await readTelemetryConfig()
 
-  const requiredSnippets = [
+  const gatewayRequiredSnippets = [
+    "import { telemetryEnabled } from './telemetry'",
+    "openTelemetry: {",
+    'traces: telemetryEnabled',
+  ]
+
+  for (const snippet of gatewayRequiredSnippets) {
+    assert.ok(
+      gatewayConfig.includes(snippet),
+      `Expected gateway config to include telemetry wiring snippet: ${snippet}`,
+    )
+  }
+
+  const telemetryRequiredSnippets = [
     'OTEL_EXPORTER_OTLP_ENDPOINT',
     'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT',
     'OTEL_EXPORTER_OTLP_METRICS_ENDPOINT',
     'OTEL_EXPORTER_OTLP_LOGS_ENDPOINT',
-    "openTelemetry: {",
+    'OTEL_TRACES_ENABLED',
+    'OTEL_METRICS_ENABLED',
+    'OTEL_LOGS_ENABLED',
+    'OTEL_BSP_MAX_QUEUE_SIZE',
+    'OTEL_BSP_MAX_EXPORT_BATCH_SIZE',
+    'OTEL_BSP_SCHEDULE_DELAY',
+    'OTEL_BSP_EXPORT_TIMEOUT',
     'telemetrySdk.start()',
     "process.once('SIGINT'",
     "process.once('SIGTERM'",
   ]
 
-  for (const snippet of requiredSnippets) {
+  for (const snippet of telemetryRequiredSnippets) {
     assert.ok(
-      gatewayConfig.includes(snippet),
-      `Expected gateway config to include telemetry snippet: ${snippet}`,
+      telemetryConfig.includes(snippet),
+      `Expected telemetry config to include snippet: ${snippet}`,
     )
   }
 })
