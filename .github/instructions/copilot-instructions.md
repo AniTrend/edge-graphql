@@ -1,7 +1,8 @@
 # Project Overview
-- GraphQL Mesh gateway that exposes a GraphQL API backed by the REST endpoints defined in swagger-spec.json.
-- Mesh configuration is code-based in mesh.config.ts and loads EDGE from .env at startup.
-- The GraphQL schema is generated at runtime from the OpenAPI spec; no hand-written resolvers.
+- GraphQL Mesh gateway that exposes a GraphQL API backed by the REST endpoints defined in `swagger-spec.json`.
+- Mesh configuration is code-based in `mesh.config.ts` and loads `EDGE` from `.env` at startup.
+- The GraphQL schema is generated from OpenAPI into `supergraph.graphql` and served through Hive Gateway.
+- See `AGENT.md` for the agent-agnostic repository operating guide.
 
 # Capability Reference
 - Start discovery with docs/project-capabilities.md to understand the currently exposed GraphQL/REST surface area and where changes belong.
@@ -26,8 +27,11 @@
 - Prefer updating swagger-spec.json when adding/removing API operations; schema is derived from it.
 
 # Skills
-- Use the docs-research skill at .github/skills/docs-research/SKILL.md for feature discovery tasks that require external documentation.
-- The skill should prioritize Context7 for package docs and DeepWiki for repository-level docs before proposing changes.
+- Use `.github/skills/docs-research/SKILL.md` for external documentation discovery.
+- Use `.github/skills/openapi-mesh-supergraph/SKILL.md` for OpenAPI → Mesh → supergraph change flow.
+- Use `.github/skills/supergraph-change-validation/SKILL.md` to validate composed output and runtime alignment.
+- Use `.github/skills/hive-gateway-otel-enrichment/SKILL.md` for OpenTelemetry enrichment changes.
+- Docs research should prioritize Context7 first, then official vendor docs when Context7 is unavailable.
 
 # Integration Notes
 - REST base URL is sourced from EDGE; requests are proxied via Mesh’s OpenAPI handler.
