@@ -4,7 +4,9 @@
   "addLabels": [":dagger: dependencies"],
   "branchPrefix": "dependencies/",
   "reviewers": ["wax911"],
-  "baseBranches": ["main"],
+  "baseBranchPatterns": [
+    "main"
+  ],
   "automerge": true,
   "automergeType": "pr",
   "automergeStrategy": "rebase"
