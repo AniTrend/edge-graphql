@@ -101,3 +101,13 @@ test('gateway config and telemetry bootstrap wiring are configured', async () =>
     )
   }
 })
+
+test('Docker image copies telemetry bootstrap file', async () => {
+  const dockerfile = await fs.readFile(path.join(projectRoot, 'Dockerfile'), 'utf-8')
+
+  assert.match(
+    dockerfile,
+    /COPY --chown=node:node telemetry\.ts \.\//,
+    'Expected Dockerfile to copy telemetry.ts into the runtime image',
+  )
+})

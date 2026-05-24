@@ -9,6 +9,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --chown=node:node mesh.config.ts ./
 COPY --chown=node:node gateway.config.ts ./
+COPY --chown=node:node telemetry.ts ./
 COPY --chown=node:node swagger-spec.json ./
 
 USER node
