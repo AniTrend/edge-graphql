@@ -1,10 +1,4 @@
-# AGENT.md
-
-Agent-agnostic contributor guide for `edge-graphql`.
-
-This document is intended for any coding assistant (or human contributor) working in this repository.
-
-## 1) Mission and boundaries
+# AGENTS.md
 
 This project exposes a GraphQL endpoint by composing an OpenAPI contract into a supergraph and serving it via Hive Gateway.
 
@@ -12,6 +6,12 @@ Primary boundary:
 
 - **Source of truth**: `swagger-spec.json`, `mesh.config.ts`, `gateway.config.ts`
 - **Generated artifact**: `supergraph.graphql` (regenerate, do not hand-edit)
+
+## 1) Fast orientation
+- Stack: Node `24.16.0` (`.nvmrc`), ESM TypeScript config (`tsconfig.json`), Hive Gateway + GraphQL Mesh Compose + OpenAPI.
+- Source of truth for API surface: `swagger-spec.json`.
+- Generated artifact: `supergraph.graphql` (always regenerate via scripts; never hand-edit).
+- Runtime wiring lives in `mesh.config.ts`, `gateway.config.ts`, and `telemetry.ts`.
 
 ## 2) Ground-truth files (read first)
 
@@ -80,9 +80,13 @@ If Context7 is unavailable in the execution environment, use official vendor doc
 
 ## 7) Local skills in this repository
 
-- `.github/skills/docs-research/SKILL.md`
-- `.github/skills/openapi-mesh-supergraph/SKILL.md`
-- `.github/skills/hive-gateway-otel-enrichment/SKILL.md`
+### Skills
+
+- Use `.agent/skills/docs-research/SKILL.md` for external documentation discovery.
+- Use `.agent/skills/openapi-mesh-supergraph/SKILL.md` for OpenAPI → Mesh → supergraph change flow.
+- Use `.agent/skills/supergraph-change-validation/SKILL.md` to validate composed output and runtime alignment.
+- Use `.agent/skills/hive-gateway-otel-enrichment/SKILL.md` for OpenTelemetry enrichment changes.
+- Docs research should prioritize Context7 first, then official vendor docs when Context7 is unavailable.
 
 Use these skills to keep changes consistent and repeatable.
 
