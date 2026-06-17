@@ -89,7 +89,7 @@ test('gateway config and telemetry bootstrap wiring are configured', async () =>
     'OTEL_BSP_MAX_EXPORT_BATCH_SIZE',
     'OTEL_BSP_SCHEDULE_DELAY',
     'OTEL_BSP_EXPORT_TIMEOUT',
-    'telemetrySdk.start()',
+    'registerInstrumentations({',
     "process.once('SIGINT'",
     "process.once('SIGTERM'",
   ]

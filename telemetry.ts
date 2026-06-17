@@ -1,13 +1,16 @@
 import 'dotenv/config'
 import { readFileSync } from 'node:fs'
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
+import { metrics } from '@opentelemetry/api'
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http'
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
+import { registerInstrumentations } from '@opentelemetry/instrumentation'
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { resourceFromAttributes } from '@opentelemetry/resources'
-import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
-import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
-import { NodeSDK } from '@opentelemetry/sdk-node'
+import { BatchLogRecordProcessor, LoggerProvider } from '@opentelemetry/sdk-logs'
+import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
 
 const parseBoolean = (value: string | undefined, defaultValue: boolean) => {
   if (value == null) {
@@ -74,7 +77,7 @@ const tracesEnabled = parseBoolean(process.env.OTEL_TRACES_ENABLED, true)
 const metricsEnabled = parseBoolean(process.env.OTEL_METRICS_ENABLED, true)
 const logsEnabled = parseBoolean(process.env.OTEL_LOGS_ENABLED, true)
 
-const telemetrySignalsConfigured = Boolean(
+export const telemetryEnabled = Boolean(
   (tracesEnabled && traceEndpoint) || (metricsEnabled && metricsEndpoint) || (logsEnabled && logsEndpoint),
 )
 
@@ -88,55 +91,74 @@ const batchProcessorConfig = {
   exportTimeoutMillis: parseNumber(process.env.OTEL_BSP_EXPORT_TIMEOUT, 30_000),
 }
 
-export const telemetryEnabled = telemetrySignalsConfigured
+const resource = resourceFromAttributes({
+  'service.name': process.env.OTEL_SERVICE_NAME ?? 'edge-graphql',
+  'service.version': resolveServiceVersion(),
+})
 
-const telemetrySdk = telemetryEnabled
-  ? new NodeSDK({
-      serviceName: process.env.OTEL_SERVICE_NAME ?? 'edge-graphql',
-      resource: resourceFromAttributes({
-        'service.version': resolveServiceVersion(),
+// Traces
+let tracerProvider: NodeTracerProvider | null = null
+if (tracesEnabled && traceEndpoint) {
+  tracerProvider = new NodeTracerProvider({
+    resource,
+    spanProcessors: [
+      new BatchSpanProcessor(
+        new OTLPTraceExporter({
+          url: traceEndpoint,
+        }),
+      ),
+    ],
+  })
+  tracerProvider.register()
+}
+
+// Metrics
+let meterProvider: MeterProvider | null = null
+if (metricsEnabled && metricsEndpoint) {
+  meterProvider = new MeterProvider({
+    resource,
+    readers: [
+      new PeriodicExportingMetricReader({
+        exporter: new OTLPMetricExporter({
+          url: metricsEndpoint,
+        }),
+        exportIntervalMillis: metricExportIntervalMillis,
+        exportTimeoutMillis: metricExportTimeoutMillis,
       }),
-      traceExporter: tracesEnabled && traceEndpoint
-        ? new OTLPTraceExporter({
-            url: traceEndpoint,
-          })
-        : undefined,
-      metricReaders: metricsEnabled && metricsEndpoint
-        ? [
-            new PeriodicExportingMetricReader({
-              exporter: new OTLPMetricExporter({
-                url: metricsEndpoint,
-              }),
-              exportIntervalMillis: metricExportIntervalMillis,
-              exportTimeoutMillis: metricExportTimeoutMillis,
-            }),
-          ]
-        : undefined,
-      logRecordProcessors: logsEnabled && logsEndpoint
-        ? [
-            new BatchLogRecordProcessor(
-              new OTLPLogExporter({
-                url: logsEndpoint,
-              }),
-              batchProcessorConfig,
-            ),
-          ]
-        : undefined,
-      instrumentations: [getNodeAutoInstrumentations()],
-    })
-  : null
+    ],
+  })
+  metrics.setGlobalMeterProvider(meterProvider)
+}
 
-if (telemetrySdk) {
-  telemetrySdk.start()
+// Logs
+let loggerProvider: LoggerProvider | null = null
+if (logsEnabled && logsEndpoint) {
+  loggerProvider = new LoggerProvider({
+    resource,
+  })
+  loggerProvider.addLogRecordProcessor(
+    new BatchLogRecordProcessor(
+      new OTLPLogExporter({
+        url: logsEndpoint,
+      }),
+      batchProcessorConfig,
+    ),
+  )
+}
+
+if (telemetryEnabled) {
+  registerInstrumentations({
+    instrumentations: [new HttpInstrumentation()],
+  })
 }
 
 const shutdownTelemetry = async () => {
-  if (!telemetrySdk) {
-    return
-  }
-
   try {
-    await telemetrySdk.shutdown()
+    await Promise.allSettled([
+      tracerProvider?.shutdown(),
+      meterProvider?.shutdown(),
+      loggerProvider?.shutdown(),
+    ].filter(Boolean))
   } catch (error) {
     console.error('OpenTelemetry shutdown failed', error)
   }
