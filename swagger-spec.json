@@ -789,6 +789,443 @@
         "title": "Person",
         "type": "object"
       },
+      "PushAcknowledgment": {
+        "description": "Acknowledgment response for mutation operations",
+        "properties": {
+          "installationId": {
+            "description": "Installation identifier",
+            "type": "string"
+          },
+          "instance": {
+            "description": "UnifiedPush instance identifier",
+            "type": "string"
+          }
+        },
+        "required": [
+          "installationId",
+          "instance"
+        ],
+        "title": "PushAcknowledgment",
+        "type": "object"
+      },
+      "PushConfirmBody": {
+        "description": "Challenge confirmation request body",
+        "properties": {
+          "instance": {
+            "default": "default",
+            "minLength": 1,
+            "type": "string"
+          },
+          "token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "PushConfirmBody",
+        "type": "object"
+      },
+      "PushDeleteBody": {
+        "description": "Installation deletion request body",
+        "properties": {
+          "instance": {
+            "default": "default",
+            "minLength": 1,
+            "type": "string"
+          },
+          "reason": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "title": "PushDeleteBody",
+        "type": "object"
+      },
+      "PushInstallation": {
+        "description": "Push installation registration state",
+        "properties": {
+          "installationId": {
+            "description": "Stable client-generated installation identifier",
+            "type": "string"
+          },
+          "instance": {
+            "description": "UnifiedPush instance identifier",
+            "type": "string"
+          },
+          "status": {
+            "description": "Lifecycle status of a push installation",
+            "enum": [
+              "pending",
+              "active",
+              "disabled",
+              "expired",
+              "revoked"
+            ],
+            "title": "PushInstallationStatus",
+            "type": "string"
+          }
+        },
+        "required": [
+          "installationId",
+          "instance",
+          "status"
+        ],
+        "title": "PushInstallation",
+        "type": "object"
+      },
+      "PushPreferencesBody": {
+        "description": "Topic preferences update request body",
+        "properties": {
+          "instance": {
+            "default": "default",
+            "minLength": 1,
+            "type": "string"
+          },
+          "topics": {
+            "properties": {
+              "airing": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "appAnnouncements": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "mediaUpdates": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "news": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "sync": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "topics"
+        ],
+        "title": "PushPreferencesBody",
+        "type": "object"
+      },
+      "PushProfileBody": {
+        "description": "Profile update request body",
+        "properties": {
+          "app": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "build": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "code": {
+                "default": null,
+                "minimum": 0,
+                "nullable": true,
+                "type": "integer"
+              },
+              "source": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "version": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "capabilities": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "notificationRuntimePermission": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "supportsRichNotifications": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "supportsSilentSync": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "unifiedPush": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "device": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "manufacturer": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "model": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "platform": {
+                "default": null,
+                "enum": [
+                  "android"
+                ],
+                "nullable": true,
+                "type": "string"
+              },
+              "sdk": {
+                "default": null,
+                "minimum": 0,
+                "nullable": true,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "identity": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "anilistUserId": {
+                "default": null,
+                "exclusiveMinimum": 0,
+                "nullable": true,
+                "type": "integer"
+              },
+              "provider": {
+                "default": null,
+                "enum": [
+                  "anilist"
+                ],
+                "nullable": true,
+                "type": "string"
+              },
+              "state": {
+                "default": null,
+                "enum": [
+                  "client-declared"
+                ],
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "instance": {
+            "default": "default",
+            "minLength": 1,
+            "type": "string"
+          },
+          "locale": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "language": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "region": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "timezone": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "topics": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "airing": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "appAnnouncements": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "mediaUpdates": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "news": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              },
+              "sync": {
+                "default": null,
+                "nullable": true,
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "views": {
+            "default": null,
+            "nullable": true,
+            "properties": {
+              "lastSeen": {
+                "default": null,
+                "nullable": true,
+                "type": "string"
+              },
+              "lastSeenAt": {
+                "default": null,
+                "nullable": true,
+                "type": "number"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "title": "PushProfileBody",
+        "type": "object"
+      },
+      "PushRegistrationBody": {
+        "description": "Installation registration request body",
+        "properties": {
+          "appBuild": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "appCode": {
+            "default": null,
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "appVersion": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "distributor": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "endpoint": {
+            "format": "uri",
+            "type": "string"
+          },
+          "installationId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "instance": {
+            "default": "default",
+            "minLength": 1,
+            "type": "string"
+          },
+          "keys": {
+            "properties": {
+              "auth": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "p256dh": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "p256dh",
+              "auth"
+            ],
+            "type": "object"
+          },
+          "locale": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "platform": {
+            "default": "android",
+            "enum": [
+              "android"
+            ],
+            "type": "string"
+          },
+          "timezone": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "topics": {
+            "default": [],
+            "items": {
+              "enum": [
+                "news",
+                "appAnnouncements",
+                "sync"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "installationId",
+          "endpoint",
+          "keys"
+        ],
+        "title": "PushRegistrationBody",
+        "type": "object"
+      },
+      "PushVapid": {
+        "description": "VAPID public key for Android Web Push subscription",
+        "properties": {
+          "applicationServerKey": {
+            "description": "Base64url-encoded VAPID public key for Web Push subscription",
+            "example": "BLbL...vFc",
+            "type": "string"
+          }
+        },
+        "required": [
+          "applicationServerKey"
+        ],
+        "title": "PushVapid",
+        "type": "object"
+      },
       "Series": {
         "description": "Aggregated media entity from multiple sources",
         "properties": {
@@ -1831,6 +2268,235 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Person"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations": {
+      "post": {
+        "operationId": "registerInstallation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushRegistrationBody"
+              }
+            }
+          },
+          "description": "",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushInstallation"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations/{installationId}": {
+      "delete": {
+        "operationId": "deleteInstallation",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "installationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushDeleteBody"
+              }
+            }
+          },
+          "description": "",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushAcknowledgment"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations/{installationId}/confirm": {
+      "post": {
+        "operationId": "confirmInstallation",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "installationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushConfirmBody"
+              }
+            }
+          },
+          "description": "",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushInstallation"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations/{installationId}/preferences": {
+      "patch": {
+        "operationId": "updatePreferences",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "installationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushPreferencesBody"
+              }
+            }
+          },
+          "description": "",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushAcknowledgment"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations/{installationId}/profile": {
+      "put": {
+        "operationId": "updateProfile",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "installationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushProfileBody"
+              }
+            }
+          },
+          "description": "",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushAcknowledgment"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/installations/{installationId}/test": {
+      "post": {
+        "operationId": "sendTestPush",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "installationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushAcknowledgment"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/push/vapid": {
+      "get": {
+        "operationId": "vapid",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushVapid"
                 }
               }
             },
