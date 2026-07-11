@@ -1,0 +1,20 @@
+{
+  "queryFields": [
+    "character",
+    "config",
+    "episodes",
+    "index",
+    "news",
+    "newsFeed",
+    "person",
+    "series",
+    "studio",
+    "vapid"
+  ],
+  "forbiddenTypePatterns": [
+    "^query_",
+    "_items_",
+    "inline",
+    "response\\d+$"
+  ]
+}
