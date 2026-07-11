@@ -9,6 +9,9 @@
     "build": "mesh-compose -o supergraph.graphql",
     "lint": "eslint .",
     "test": "node --test \"tests/**/*.js\"",
+    "test:contract": "node --test tests/openapi-contract.spec.js",
+    "pretest:surface": "npm run build",
+    "test:surface": "node --test tests/graphql-surface.spec.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

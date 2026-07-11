@@ -65,11 +65,37 @@ jobs:
             exit 1
           fi
 
+      - name: Validate downloaded spec is valid JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('swagger-spec.json','utf8'))"
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate OpenAPI contract
+        run: npm run test:contract
+
+      - name: Compose supergraph
+        run: npm run build
+        env:
+          EDGE: ${{ env.EDGE || 'http://localhost:9999' }}
+
+      - name: Validate generated GraphQL surface
+        run: npm run test:surface
+        env:
+          EDGE: ${{ env.EDGE || 'http://localhost:9999' }}
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v8
         with:
           add-paths: |
             swagger-spec.json
+            supergraph.graphql
           token: ${{ steps.app-token.outputs.token }}
           signoff: true
           delete-branch: true
@@ -78,6 +104,7 @@ jobs:
           title: "chore: update swagger spec"
           body: |
             This PR was automatically generated to sync swagger-spec.json.
+            Validation checks passed: OpenAPI contract, supergraph composition, and generated GraphQL surface.
             Please review the changes and merge if everything looks good.
           branch: build/swagger-spec-update
           base: ${{ env.BASE_BRANCH }}

@@ -25,6 +25,49 @@ Current OpenAPI operations map to GraphQL `Query` fields as follows:
 | `person` | `GET` | `/v1/people` |
 | `character` | `GET` | `/v1/characters` |
 | `index` | `GET` | `/v1` |
+| `vapid` | `GET` | `/v1/push/vapid` |
+
+## Contract Guardrails
+
+Automated validation prevents malformed or unstable OpenAPI output from being synced
+and composed into the production GraphQL gateway. The guardrails run in CI before
+any spec-sync PR is opened.
+
+### OpenAPI contract tests (`tests/openapi-contract.spec.js`)
+
+- Schema name hygiene: rejects `undefined`, `query_`-prefixed, `_items_`-containing,
+  `inline`, and `response\d+`-suffixed schema names in `components.schemas`
+- Type safety: rejects OpenAPI 3.0-invalid `type` arrays
+- Operation coverage: asserts all 16 expected `operationId` values are present
+- Path coverage: asserts all 9 public GET paths exist
+- Fixture checkpoint: cross-references `tests/fixtures/public-contract.json`
+
+### Generated GraphQL surface tests (`tests/graphql-surface.spec.js`)
+
+- Runs after `npm run build` regenerates `supergraph.graphql`
+- Asserts all 10 expected Query fields are present
+- Rejects `undefined` in generated GraphQL type names
+- Forbidden-name pattern checks (`^query_`, `_items_`, etc.) are deferred until
+  the upstream source in `on-the-edge` normalizes inline response schemas
+  (see AniTrend/on-the-edge#379)
+
+### CI integration (`.github/workflows/api-spec-gen.yml`)
+
+The spec-sync workflow validates before creating a PR:
+
+```
+Download spec → Validate JSON → Validate contract → Compose → Validate surface → Create PR
+```
+
+A malformed contract causes the workflow to fail without opening a PR.
+
+### Test commands
+
+```
+npm run test:contract  # OpenAPI contract guardrails
+npm run test:surface   # Generated supergraph surface check
+npm test               # Full suite (includes wiring, contract, surface)
+```
 
 ## Configurable Behaviors
 
