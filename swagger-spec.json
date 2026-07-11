@@ -639,7 +639,7 @@
               "platform": {
                 "default": null,
                 "enum": [
-                  "android"
+                  "ANDROID"
                 ],
                 "nullable": true,
                 "type": "string"
@@ -666,7 +666,7 @@
               "provider": {
                 "default": null,
                 "enum": [
-                  "anilist"
+                  "ANILIST"
                 ],
                 "nullable": true,
                 "type": "string"
@@ -674,7 +674,7 @@
               "state": {
                 "default": null,
                 "enum": [
-                  "client-declared"
+                  "CLIENT_DECLARED"
                 ],
                 "nullable": true,
                 "type": "string"
@@ -822,9 +822,9 @@
             "type": "string"
           },
           "platform": {
-            "default": "android",
+            "default": "ANDROID",
             "enum": [
-              "android"
+              "ANDROID"
             ],
             "type": "string"
           },
@@ -837,9 +837,9 @@
             "default": [],
             "items": {
               "enum": [
-                "news",
-                "appAnnouncements",
-                "sync"
+                "NEWS",
+                "APP_ANNOUNCEMENTS",
+                "SYNC"
               ],
               "type": "string"
             },
@@ -1363,14 +1363,14 @@
       "EpisodeKind": {
         "description": "Episode type classification",
         "enum": [
-          "main",
-          "ova",
-          "ona",
-          "recap",
-          "filler",
-          "special"
+          "MAIN",
+          "OVA",
+          "ONA",
+          "RECAP",
+          "FILLER",
+          "SPECIAL"
         ],
-        "example": "main",
+        "example": "MAIN",
         "title": "EpisodeKind",
         "type": "string"
       },
@@ -1479,11 +1479,11 @@
       "PushInstallationStatus": {
         "description": "Lifecycle status of a push installation",
         "enum": [
-          "pending",
-          "active",
-          "disabled",
-          "expired",
-          "revoked"
+          "PENDING",
+          "ACTIVE",
+          "DISABLED",
+          "EXPIRED",
+          "REVOKED"
         ],
         "title": "PushInstallationStatus",
         "type": "string"
