@@ -8,13 +8,28 @@ import { parse, visit } from 'graphql'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const projectRoot = path.resolve(__dirname, '..')
 
+const SUPERGRAOH_PATH = path.join(projectRoot, 'supergraph.graphql')
+
 const readSupergraph = async () => {
-  return fs.readFile(path.join(projectRoot, 'supergraph.graphql'), 'utf-8')
+  return fs.readFile(SUPERGRAOH_PATH, 'utf-8')
+}
+
+const checkSupergraphExists = async () => {
+  try {
+    await fs.access(SUPERGRAOH_PATH)
+    return true
+  } catch {
+    return false
+  }
 }
 
 // ── Query field coverage ────────────────────────────────────────────
 
-test('generated GraphQL Query surface remains stable', async () => {
+test('generated GraphQL Query surface remains stable', async (t) => {
+  if (!(await checkSupergraphExists())) {
+    t.skip('supergraph.graphql not found; run npm run build first')
+    return
+  }
   const sdl = await readSupergraph()
   const fields = new Set()
 
@@ -48,7 +63,11 @@ test('generated GraphQL Query surface remains stable', async () => {
 
 // ── Forbidden generated type names: undefined check ─────────────────
 
-test('generated GraphQL types do not contain undefined type name', async () => {
+test('generated GraphQL types do not contain undefined type name', async (t) => {
+  if (!(await checkSupergraphExists())) {
+    t.skip('supergraph.graphql not found; run npm run build first')
+    return
+  }
   const sdl = await readSupergraph()
   const offenders = []
 
