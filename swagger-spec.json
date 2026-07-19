@@ -252,6 +252,33 @@
         "title": "Episodes",
         "type": "object"
       },
+      "Health": {
+        "description": "Basic health metrics for the edge service",
+        "properties": {
+          "status": {
+            "enum": [
+              "healthy",
+              "unhealthy"
+            ],
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "ISO 8601 timestamp",
+            "type": "string"
+          },
+          "uptime": {
+            "description": "Uptime in milliseconds",
+            "type": "number"
+          }
+        },
+        "required": [
+          "status",
+          "uptime",
+          "timestamp"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
       "News": {
         "description": "Schema representing a news document.",
         "properties": {
@@ -2098,6 +2125,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Episodes"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
                 }
               }
             },
