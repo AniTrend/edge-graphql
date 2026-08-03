@@ -256,11 +256,7 @@
         "description": "Basic health metrics for the edge service",
         "properties": {
           "status": {
-            "enum": [
-              "healthy",
-              "unhealthy"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/HealthStatus"
           },
           "timestamp": {
             "description": "ISO 8601 timestamp",
@@ -1495,6 +1491,14 @@
         "title": "Episode",
         "type": "object"
       },
+      "HealthStatus": {
+        "enum": [
+          "healthy",
+          "unhealthy"
+        ],
+        "title": "HealthStatus",
+        "type": "string"
+      },
       "NewsFeedLocale": {
         "default": "en-US",
         "description": "Locale for the news feed, e.g., en-GB, de-DE, fr-FR.",
@@ -1539,11 +1543,7 @@
             "$ref": "#/components/schemas/AnimeThemesSong"
           },
           "type": {
-            "enum": [
-              "OP",
-              "ED"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/AnimeThemeType"
           }
         },
         "required": [
@@ -1578,12 +1578,7 @@
             "type": "string"
           },
           "type": {
-            "enum": [
-              "BACKDROP",
-              "POSTER",
-              "LOGO"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/SeriesImageType"
           },
           "url": {
             "type": "string"
@@ -1872,6 +1867,25 @@
         ],
         "title": "AnimeThemesSong",
         "type": "object"
+      },
+      "AnimeThemeType": {
+        "description": "Theme type classification (opening or ending)",
+        "enum": [
+          "OP",
+          "ED"
+        ],
+        "title": "AnimeThemeType",
+        "type": "string"
+      },
+      "SeriesImageType": {
+        "description": "Image type classification (backdrop, poster, or logo)",
+        "enum": [
+          "BACKDROP",
+          "POSTER",
+          "LOGO"
+        ],
+        "title": "SeriesImageType",
+        "type": "string"
       },
       "SeriesNetworkCategory": {
         "description": "Network role classification",
