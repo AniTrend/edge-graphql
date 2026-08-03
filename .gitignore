@@ -165,3 +165,4 @@ dist
 # Auto generated client
 .mesh
 supergraph.graphql
+.slim/deepwork/
