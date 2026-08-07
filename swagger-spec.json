@@ -551,34 +551,7 @@
             "type": "string"
           },
           "topics": {
-            "properties": {
-              "airing": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "appAnnouncements": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "mediaUpdates": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "news": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "sync": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushPreferencesTopics"
           }
         },
         "required": [
@@ -587,123 +560,82 @@
         "title": "PushPreferencesBody",
         "type": "object"
       },
+      "PushPreferencesTopics": {
+        "description": "Topic preference flags for the installation",
+        "properties": {
+          "airing": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "appAnnouncements": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "mediaUpdates": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "news": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "sync": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          }
+        },
+        "title": "PushPreferencesTopics",
+        "type": "object"
+      },
+      "PushProfileApp": {
+        "default": null,
+        "description": "Application build metadata for the profile",
+        "nullable": true,
+        "properties": {
+          "build": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "code": {
+            "default": null,
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "source": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "version": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "title": "PushProfileApp",
+        "type": "object"
+      },
       "PushProfileBody": {
         "description": "Profile update request body",
         "properties": {
           "app": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "build": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "code": {
-                "default": null,
-                "minimum": 0,
-                "nullable": true,
-                "type": "integer"
-              },
-              "source": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "version": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileApp"
           },
           "capabilities": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "notificationRuntimePermission": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "supportsRichNotifications": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "supportsSilentSync": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "unifiedPush": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileCapabilities"
           },
           "device": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "manufacturer": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "model": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "platform": {
-                "default": null,
-                "enum": [
-                  "ANDROID"
-                ],
-                "nullable": true,
-                "type": "string"
-              },
-              "sdk": {
-                "default": null,
-                "minimum": 0,
-                "nullable": true,
-                "type": "integer"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileDevice"
           },
           "identity": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "anilistUserId": {
-                "default": null,
-                "exclusiveMinimum": 0,
-                "nullable": true,
-                "type": "integer"
-              },
-              "provider": {
-                "default": null,
-                "enum": [
-                  "ANILIST"
-                ],
-                "nullable": true,
-                "type": "string"
-              },
-              "state": {
-                "default": null,
-                "enum": [
-                  "CLIENT_DECLARED"
-                ],
-                "nullable": true,
-                "type": "string"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileIdentity"
           },
           "instance": {
             "default": "default",
@@ -711,78 +643,171 @@
             "type": "string"
           },
           "locale": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "language": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "region": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "timezone": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileLocale"
           },
           "topics": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "airing": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "appAnnouncements": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "mediaUpdates": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "news": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              },
-              "sync": {
-                "default": null,
-                "nullable": true,
-                "type": "boolean"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileTopics"
           },
           "views": {
-            "default": null,
-            "nullable": true,
-            "properties": {
-              "lastSeen": {
-                "default": null,
-                "nullable": true,
-                "type": "string"
-              },
-              "lastSeenAt": {
-                "default": null,
-                "nullable": true,
-                "type": "number"
-              }
-            },
-            "type": "object"
+            "$ref": "#/components/schemas/PushProfileViews"
           }
         },
         "title": "PushProfileBody",
+        "type": "object"
+      },
+      "PushProfileCapabilities": {
+        "default": null,
+        "description": "Push capability flags for the profile",
+        "nullable": true,
+        "properties": {
+          "notificationRuntimePermission": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "supportsRichNotifications": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "supportsSilentSync": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "unifiedPush": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          }
+        },
+        "title": "PushProfileCapabilities",
+        "type": "object"
+      },
+      "PushProfileDevice": {
+        "default": null,
+        "description": "Device hardware and SDK metadata for the profile",
+        "nullable": true,
+        "properties": {
+          "manufacturer": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "model": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "platform": {
+            "$ref": "#/components/schemas/PushProfileDevicePlatform"
+          },
+          "sdk": {
+            "default": null,
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          }
+        },
+        "title": "PushProfileDevice",
+        "type": "object"
+      },
+      "PushProfileIdentity": {
+        "default": null,
+        "description": "Identity provider linkage for the profile",
+        "nullable": true,
+        "properties": {
+          "anilistUserId": {
+            "default": null,
+            "exclusiveMinimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/PushProfileIdentityProvider"
+          },
+          "state": {
+            "$ref": "#/components/schemas/PushProfileIdentityState"
+          }
+        },
+        "title": "PushProfileIdentity",
+        "type": "object"
+      },
+      "PushProfileLocale": {
+        "default": null,
+        "description": "Locale and timezone for the profile",
+        "nullable": true,
+        "properties": {
+          "language": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "region": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "timezone": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "title": "PushProfileLocale",
+        "type": "object"
+      },
+      "PushProfileTopics": {
+        "default": null,
+        "description": "Topic preference flags for the profile",
+        "nullable": true,
+        "properties": {
+          "airing": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "appAnnouncements": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "mediaUpdates": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "news": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          },
+          "sync": {
+            "default": null,
+            "nullable": true,
+            "type": "boolean"
+          }
+        },
+        "title": "PushProfileTopics",
+        "type": "object"
+      },
+      "PushProfileViews": {
+        "default": null,
+        "description": "Last view state for the profile",
+        "nullable": true,
+        "properties": {
+          "lastSeen": {
+            "default": null,
+            "nullable": true,
+            "type": "string"
+          },
+          "lastSeenAt": {
+            "default": null,
+            "nullable": true,
+            "type": "number"
+          }
+        },
+        "title": "PushProfileViews",
         "type": "object"
       },
       "PushRegistrationBody": {
@@ -823,21 +848,7 @@
             "type": "string"
           },
           "keys": {
-            "properties": {
-              "auth": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "p256dh": {
-                "minLength": 1,
-                "type": "string"
-              }
-            },
-            "required": [
-              "p256dh",
-              "auth"
-            ],
-            "type": "object"
+            "$ref": "#/components/schemas/PushRegistrationKeys"
           },
           "locale": {
             "default": null,
@@ -845,11 +856,7 @@
             "type": "string"
           },
           "platform": {
-            "default": "ANDROID",
-            "enum": [
-              "ANDROID"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/PushRegistrationPlatform"
           },
           "timezone": {
             "default": null,
@@ -859,12 +866,7 @@
           "topics": {
             "default": [],
             "items": {
-              "enum": [
-                "NEWS",
-                "APP_ANNOUNCEMENTS",
-                "SYNC"
-              ],
-              "type": "string"
+              "$ref": "#/components/schemas/PushRegistrationTopic"
             },
             "type": "array"
           }
@@ -875,6 +877,25 @@
           "keys"
         ],
         "title": "PushRegistrationBody",
+        "type": "object"
+      },
+      "PushRegistrationKeys": {
+        "description": "Web Push subscription keys for the installation",
+        "properties": {
+          "auth": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "p256dh": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "p256dh",
+          "auth"
+        ],
+        "title": "PushRegistrationKeys",
         "type": "object"
       },
       "PushVapid": {
@@ -1517,6 +1538,55 @@
           "REVOKED"
         ],
         "title": "PushInstallationStatus",
+        "type": "string"
+      },
+      "PushProfileDevicePlatform": {
+        "default": null,
+        "description": "Device platform for the profile",
+        "enum": [
+          "ANDROID"
+        ],
+        "nullable": true,
+        "title": "PushProfileDevicePlatform",
+        "type": "string"
+      },
+      "PushProfileIdentityProvider": {
+        "default": null,
+        "description": "Identity provider for the profile",
+        "enum": [
+          "ANILIST"
+        ],
+        "nullable": true,
+        "title": "PushProfileIdentityProvider",
+        "type": "string"
+      },
+      "PushProfileIdentityState": {
+        "default": null,
+        "description": "Declaration state of the profile identity",
+        "enum": [
+          "CLIENT_DECLARED"
+        ],
+        "nullable": true,
+        "title": "PushProfileIdentityState",
+        "type": "string"
+      },
+      "PushRegistrationPlatform": {
+        "default": "ANDROID",
+        "description": "Client platform for the installation",
+        "enum": [
+          "ANDROID"
+        ],
+        "title": "PushRegistrationPlatform",
+        "type": "string"
+      },
+      "PushRegistrationTopic": {
+        "description": "Topic subscription for the installation",
+        "enum": [
+          "NEWS",
+          "APP_ANNOUNCEMENTS",
+          "SYNC"
+        ],
+        "title": "PushRegistrationTopic",
         "type": "string"
       },
       "AnimeThemes": {
