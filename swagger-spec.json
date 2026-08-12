@@ -109,6 +109,9 @@
             },
             "type": "array"
           },
+          "promotion": {
+            "$ref": "#/components/schemas/Promotion"
+          },
           "settings": {
             "$ref": "#/components/schemas/ConfigSettings"
           }
@@ -462,6 +465,36 @@
           "expiresAt"
         ],
         "title": "Person",
+        "type": "object"
+      },
+      "Promotion": {
+        "description": "Promotion payload for eligible clients",
+        "nullable": true,
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/PromotionAction"
+          },
+          "id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "targetProduct": {
+            "$ref": "#/components/schemas/PromotionTargetProduct"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "targetProduct",
+          "title",
+          "message",
+          "action"
+        ],
+        "title": "Promotion",
         "type": "object"
       },
       "PushAcknowledgment": {
@@ -1291,6 +1324,122 @@
         "title": "StudioQuery",
         "type": "object"
       },
+      "UpdateDecision": {
+        "description": "Update decision for the requesting client",
+        "properties": {
+          "release": {
+            "$ref": "#/components/schemas/UpdateRelease"
+          },
+          "status": {
+            "$ref": "#/components/schemas/UpdateDecisionStatus"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "UpdateDecision",
+        "type": "object"
+      },
+      "UpdateQuery": {
+        "additionalProperties": false,
+        "description": "Query parameters for the cached update lookup",
+        "properties": {
+          "channel": {
+            "default": "STABLE",
+            "enum": [
+              "STABLE",
+              "BETA",
+              "EXPERIMENTAL"
+            ],
+            "type": "string"
+          },
+          "product": {
+            "enum": [
+              "ANITREND_APP",
+              "ANITREND_V2"
+            ],
+            "type": "string"
+          }
+        },
+        "title": "UpdateQuery",
+        "type": "object"
+      },
+      "UpdateRelease": {
+        "description": "Cached release when an update is available for the client",
+        "nullable": true,
+        "properties": {
+          "assets": {
+            "description": "Downloadable assets; filtered to the configured asset names when the source config lists them",
+            "items": {
+              "$ref": "#/components/schemas/UpdateReleaseAsset"
+            },
+            "type": "array"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/UpdateChannel"
+          },
+          "code": {
+            "description": "Version code resolved from tagged version.properties or the semver tag",
+            "exclusiveMinimum": 0,
+            "type": "integer"
+          },
+          "htmlUrl": {
+            "description": "URL of the release on GitHub",
+            "format": "uri",
+            "type": "string"
+          },
+          "name": {
+            "description": "Release name, falling back to the tag",
+            "minLength": 1,
+            "type": "string"
+          },
+          "prerelease": {
+            "description": "Whether the release is a prerelease",
+            "type": "boolean"
+          },
+          "product": {
+            "$ref": "#/components/schemas/UpdateProduct"
+          },
+          "publishedAt": {
+            "description": "Epoch milliseconds when the release was published",
+            "type": "number"
+          },
+          "releaseNotes": {
+            "description": "Release body from GitHub",
+            "nullable": true,
+            "type": "string"
+          },
+          "tag": {
+            "description": "GitHub release tag",
+            "minLength": 1,
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "Epoch milliseconds when the edge last refreshed this cached update",
+            "type": "number"
+          },
+          "version": {
+            "description": "Version resolved from tagged version.properties or the semver tag",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "product",
+          "channel",
+          "tag",
+          "name",
+          "version",
+          "code",
+          "publishedAt",
+          "prerelease",
+          "htmlUrl",
+          "assets",
+          "updatedAt"
+        ],
+        "title": "UpdateRelease",
+        "type": "object"
+      },
       "CharacterMediaRelation": {
         "description": "Media entity related to a character",
         "properties": {
@@ -1526,6 +1675,35 @@
         "maxLength": 5,
         "minLength": 5,
         "title": "NewsFeedLocale",
+        "type": "string"
+      },
+      "PromotionAction": {
+        "description": "Action attached to a promotion payload",
+        "properties": {
+          "type": {
+            "enum": [
+              "OPEN_URL"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "url"
+        ],
+        "title": "PromotionAction",
+        "type": "object"
+      },
+      "PromotionTargetProduct": {
+        "description": "Product the promotion is intended for",
+        "enum": [
+          "ANITREND_V2"
+        ],
+        "title": "PromotionTargetProduct",
         "type": "string"
       },
       "PushInstallationStatus": {
@@ -1817,6 +1995,72 @@
         },
         "title": "StudioTitle",
         "type": "object"
+      },
+      "UpdateDecisionStatus": {
+        "description": "Whether an update is available for the requesting client version",
+        "enum": [
+          "UP_TO_DATE",
+          "UPDATE_AVAILABLE",
+          "UNSUPPORTED"
+        ],
+        "title": "UpdateDecisionStatus",
+        "type": "string"
+      },
+      "UpdateReleaseAsset": {
+        "description": "Downloadable asset of a release",
+        "properties": {
+          "contentType": {
+            "description": "MIME content type of the asset as reported by GitHub",
+            "nullable": true,
+            "type": "string"
+          },
+          "digest": {
+            "description": "GitHub asset digest; validates the downloaded content and does not replace Android package-signing verification",
+            "nullable": true,
+            "type": "string"
+          },
+          "name": {
+            "description": "File name of the release asset",
+            "minLength": 1,
+            "type": "string"
+          },
+          "size": {
+            "description": "Asset size in bytes when reported by GitHub",
+            "minimum": 0,
+            "nullable": true,
+            "type": "integer"
+          },
+          "url": {
+            "description": "Direct download URL of the release asset",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "url"
+        ],
+        "title": "UpdateReleaseAsset",
+        "type": "object"
+      },
+      "UpdateChannel": {
+        "description": "Release channel of the cached update record",
+        "enum": [
+          "STABLE",
+          "BETA",
+          "EXPERIMENTAL"
+        ],
+        "title": "UpdateChannel",
+        "type": "string"
+      },
+      "UpdateProduct": {
+        "description": "Product the cached update belongs to",
+        "enum": [
+          "ANITREND_APP",
+          "ANITREND_V2"
+        ],
+        "title": "UpdateProduct",
+        "type": "string"
       },
       "ConfigNavigationGroup": {
         "description": "Navigation item group classification",
@@ -2686,6 +2930,51 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Studio"
+                }
+              }
+            },
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/update": {
+      "get": {
+        "operationId": "update",
+        "parameters": [
+          {
+            "description": "",
+            "in": "query",
+            "name": "product",
+            "schema": {
+              "enum": [
+                "ANITREND_APP",
+                "ANITREND_V2"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "channel",
+            "schema": {
+              "default": "STABLE",
+              "enum": [
+                "STABLE",
+                "BETA",
+                "EXPERIMENTAL"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateDecision"
                 }
               }
             },
