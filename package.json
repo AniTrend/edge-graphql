@@ -51,7 +51,7 @@
       }
     },
     "js-yaml": "4.3.2",
-    "protobufjs": "8.7.2",
+    "protobufjs": "8.8.0",
     "uuid": "14.0.2"
   }
 }
