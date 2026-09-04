@@ -50,7 +50,7 @@
         "brace-expansion": "2.1.4"
       }
     },
-    "js-yaml": "4.3.2",
+    "js-yaml": "5.4.1",
     "protobufjs": "8.8.0",
     "uuid": "14.0.2"
   }
