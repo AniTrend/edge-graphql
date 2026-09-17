@@ -25,7 +25,7 @@
     "@opentelemetry/sdk-metrics": "^2.8.0",
     "@opentelemetry/sdk-trace-base": "^2.8.0",
     "@opentelemetry/sdk-trace-node": "^2.8.0",
-    "dotenv": "^17.0.0",
+    "dotenv": "^18.0.0",
     "graphql": "^16.8.1",
     "@graphql-hive/gateway": "^2.3.0",
     "@graphql-mesh/compose-cli": "^1.5.9",
