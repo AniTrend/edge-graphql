@@ -44,12 +44,14 @@ test('gateway forwards required headers to EdgeAPI transport', async () => {
     "['accept-encoding', '{context.headers.accept-encoding}']",
     "['authorization', '{context.headers.authorization}']",
     "['user-agent', '{context.headers.user-agent}']",
-    "['x-app-name', '{context.headers.x-app-name}']",
+    "['x-app-id', '{context.headers.x-app-id}']",
+    "['x-app-package', '{context.headers.x-app-package}']",
     "['x-app-version', '{context.headers.x-app-version}']",
     "['x-app-code', '{context.headers.x-app-code}']",
     "['x-app-source', '{context.headers.x-app-source}']",
     "['x-app-locale', '{context.headers.x-app-locale}']",
-    "['x-app-build', '{context.headers.x-app-build}']",
+    "['x-app-build-type', '{context.headers.x-app-build-type}']",
+    "['x-device-build-id', '{context.headers.x-device-build-id}']",
   ]
 
   for (const mapping of expectedHeaderMappings) {
