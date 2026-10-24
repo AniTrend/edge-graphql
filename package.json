@@ -8,6 +8,7 @@
     "start": "mesh-compose -o supergraph.graphql && hive-gateway supergraph",
     "build": "mesh-compose -o supergraph.graphql",
     "lint": "eslint .",
+    "pretest": "npm run build",
     "test": "node --test \"tests/**/*.js\"",
     "test:contract": "node --test tests/openapi-contract.spec.js",
     "pretest:surface": "npm run build",
@@ -56,6 +57,10 @@
     "@graphql-hive/gateway-runtime": {
       "@graphql-hive/yoga": "0.49.9",
       "@graphql-yoga/plugin-apollo-usage-report": "0.19.6"
+    },
+    "@graphql-hive/laboratory": {
+      "dompurify": "3.4.17",
+      "zod": "4.6.6"
     }
   }
 }
