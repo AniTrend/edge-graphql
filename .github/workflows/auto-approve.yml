@@ -1,24 +1,17 @@
-name: Auto Approve
+name: Auto Approve (disabled pending risk gate)
 
-on: 
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
+on:
   workflow_dispatch:
-    inputs: 
-      pullRequestNumber:
-        description: Pull request number to auto-approve
-        required: true
-  
+
+permissions:
+  contents: read
+
 jobs:
-  auto-approve:
+  manual-review-required:
+    name: Manual review required
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    if: github.actor == 'renovate[bot]' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: hmarr/auto-approve-action@v4.0.0
-        with:
-          review-message: "Auto approved automated PR"
-          pull-request-number: ${{ github.event.inputs.pullRequestNumber }}
+      - name: Explain approval policy
+        run: |
+          echo "Automatic PR approval is disabled."
+          echo "Dependency changes require the trusted risk-review gate and repository protections."
