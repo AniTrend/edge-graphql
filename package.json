@@ -63,7 +63,7 @@
       "@graphql-yoga/plugin-apollo-usage-report": "0.19.6"
     },
     "@graphql-hive/laboratory": {
-      "dompurify": "3.4.17"
+      "dompurify": "3.4.18"
     }
   }
 }
