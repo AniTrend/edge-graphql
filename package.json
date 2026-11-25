@@ -59,7 +59,7 @@
     "systeminformation": "5.33.19",
     "uuid": "14.0.3",
     "@graphql-hive/gateway-runtime": {
-      "@graphql-hive/yoga": "0.50.2",
+      "@graphql-hive/yoga": "0.51.0",
       "@graphql-yoga/plugin-apollo-usage-report": "1.1.1"
     },
     "@graphql-hive/laboratory": {
